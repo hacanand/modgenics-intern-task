@@ -70,7 +70,7 @@ export default function CaptchaSolver() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="text-2xl font-bold text-center bg-gray-200 p-4 rounded  ">
+            <div className="text-2xl font-bold text-center bg-gray-200 p-4 rounded select-none  ">
               {captcha}
             </div>
             <Input
