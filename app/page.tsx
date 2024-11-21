@@ -1,53 +1,65 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function CaptchaSolver() {
-  const [captcha, setCaptcha] = useState('')
-  const [userInput, setUserInput] = useState('')
-  const [coins, setCoins] = useState(0)
-  const [message, setMessage] = useState('')
-
+  const [captcha, setCaptcha] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [coins, setCoins] = useState(0);
+  const [message, setMessage] = useState("");
+//set coins in the local storage
   useEffect(() => {
-    fetchNewCaptcha()
-  }, [])
+    const coins = localStorage.getItem("coins");
+    if (coins) {
+      setCoins(parseInt(coins));
+    }
+    fetchNewCaptcha();
+  }, []);
 
   const fetchNewCaptcha = async () => {
     try {
-      const response = await fetch('/api/captcha')
-      const data = await response.json()
-      setCaptcha(data.captcha)
+      const response = await fetch("/api/captcha");
+      const data = await response.json();
+      setCaptcha(data.captcha);
     } catch (error) {
-      console.error('Error fetching CAPTCHA:', error)
+      console.error("Error fetching CAPTCHA:", error);
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const response = await fetch('/api/verify', {
-        method: 'POST',
+      const response = await fetch("/api/verify", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ captcha, userInput }),
-      })
-      const data = await response.json()
+      });
+      const data = await response.json();
       if (data.success) {
-        setCoins(data.coins)
-        setMessage('Correct! You earned a coin.')
+        localStorage.setItem("coins", data.coins);
+        setCoins(data.coins);
+        setMessage("Correct! You earned a coin.");
       } else {
-        setMessage('Incorrect. Try again.')
+        setMessage("Incorrect. Try again.");
       }
-      setUserInput('')
-      fetchNewCaptcha()
+      setUserInput("");
+      fetchNewCaptcha();
     } catch (error) {
-      console.error('Error verifying CAPTCHA:', error)
+      console.error("Error verifying CAPTCHA:", error);
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -58,7 +70,7 @@ export default function CaptchaSolver() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="text-2xl font-bold text-center bg-gray-200 p-4 rounded">
+            <div className="text-2xl font-bold text-center bg-gray-200 p-4 rounded  ">
               {captcha}
             </div>
             <Input
@@ -74,11 +86,17 @@ export default function CaptchaSolver() {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center">
-          <p className="text-sm text-gray-500">{message}</p>
+         
+          <p
+            className={`${
+              message == "Correct! You earned a coin."? "text-green-500" : "text-red-500"
+            }  text-sm  text-center`}
+          >
+            {message}
+          </p>
           <p className="text-lg font-semibold">Coins: {coins}</p>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
-
