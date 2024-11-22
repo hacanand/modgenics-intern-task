@@ -19,11 +19,11 @@ export default function CaptchaSolver() {
   const [message, setMessage] = useState("");
 //set coins in the local storage
   useEffect(() => {
+    fetchNewCaptcha();
     const coins = localStorage.getItem("coins");
     if (coins) {
       setCoins(parseInt(coins));
     }
-    fetchNewCaptcha();
   }, []);
 
   const fetchNewCaptcha = async () => {
