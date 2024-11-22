@@ -11,6 +11,9 @@
 - Run the command `npm run dev`
 - Open the browser and go to `http://localhost:3000`
 
+# Live Demo
+- I have deployed the project on vercel you can access it by the following link
+- `https://modgenics-intern-task.vercel.app/`
 
 ## Note
 - I have used Next.js because it easy to deploy on vercel freely, and free from cors issue.
